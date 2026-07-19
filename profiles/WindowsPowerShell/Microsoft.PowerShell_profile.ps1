@@ -1,7 +1,7 @@
 Invoke-Expression (&starship init powershell)
 
 $global:abbrs = @{
-    ag   = 'rg'
+    ag   = 'rg -S'
     g    = 'lazygit'
     gb   = 'git branch --sort=-committerdate'
     ggl  = 'git pull'

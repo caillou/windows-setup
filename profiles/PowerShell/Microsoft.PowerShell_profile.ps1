@@ -11,7 +11,7 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 $global:abbrs = @{
-    ag   = 'rg'
+    ag   = 'rg -S'
     g    = 'lazygit'
     gb   = 'git branch --sort=-committerdate'
     ggl  = 'git pull'
