@@ -1,5 +1,9 @@
 Invoke-Expression (&starship init powershell)
 
+# Show autosuggestions as a dropdown list instead of inline gray text
+# (trial period — F2 toggles back to InlineView on the fly)
+Set-PSReadLineOption -PredictionViewStyle ListView
+
 # Fuzzy finding (fzf + PSFzf): Ctrl+T = fuzzy file picker, Ctrl+R = fuzzy history
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 

@@ -97,6 +97,7 @@ both. A minimal config with the git dirty/state indicators grafted from
 | `z <fragment>` / `j <fragment>` | jump to a frecent directory (zoxide) |
 | `zi <fragment>` | zoxide jump with interactive fzf picker |
 | `→` | accept the gray inline autosuggestion |
+| `F2` | toggle autosuggestion view: list ↔ inline (profile defaults to list) |
 | `abbr` + `Space`/`Enter` | expand abbreviation (see table in profile) |
 
 ## Versions at time of writing
