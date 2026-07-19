@@ -1,0 +1,40 @@
+# Top-level format: only the modules we want, in order.
+format = "$directory$git_branch$git_state$git_status$cmd_duration$line_break$character"
+
+[directory]
+# Keep the last 4 dirs in full; abbreviate any leading dirs to their first
+# letter (fish-style) instead of dropping them.
+truncation_length = 4
+fish_style_pwd_dir_length = 1
+# Show the path from the filesystem root, not just from the repo root.
+truncate_to_repo = false
+# Use the native Windows separator (\) rather than /.
+use_os_path_sep = true
+
+[git_branch]
+# Drop the "on " prefix; keep the branch (with its symbol) in gray.
+format = "[$symbol$branch]($style) "
+style = "bright-black"
+
+[cmd_duration]
+# "took XXmYYs" in yellow, same as the default.
+style = "yellow bold"
+
+[git_status]
+# Pure-style: a single "*" (pink) when the repo is dirty in any way; the
+# individual state symbols are zero-width spaces so they collapse into it.
+# Arrows show ahead/behind vs upstream; "=" symbol below is a stash marker.
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+style = "cyan"
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+
+[git_state]
+# Rebase/merge/cherry-pick progress, e.g. "(REBASING 2/5)".
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
