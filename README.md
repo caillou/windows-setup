@@ -12,6 +12,7 @@ Make PowerShell 7 on Windows feel like my fish setup (almost-stock fish +
 | Fuzzy find | fzf + PSFzf module (`Ctrl+T` / `Ctrl+R` / `Alt+C`) | jethrokuan/fzf |
 | Dir jumping | zoxide (`z`, abbr `j`) | jethrokuan/z |
 | Code search | ripgrep (`rg`, abbr `ag`) | ag (the silver searcher) |
+| File find | fd (replaces `ag -g`, [why](https://caillou.ch/blog/2026-07-19-replacing-ag-with-rg-and-fd/)) | fd |
 | Abbreviations | hand-rolled PSReadLine key handlers in profile | fish `abbr` |
 | Autosuggestions | PSReadLine (built-in, on by default in pwsh 7.6+) | fish built-in |
 
@@ -44,6 +45,7 @@ winget install Starship.Starship
 winget install junegunn.fzf
 winget install ajeetdsouza.zoxide
 winget install BurntSushi.ripgrep.MSVC
+winget install sharkdp.fd
 
 # 2. Modules (run inside pwsh 7 — restart terminal first so PATH is fresh)
 Install-PSResource -Name PSFzf -Scope CurrentUser -TrustRepository -AcceptLicense
@@ -99,11 +101,13 @@ both. A minimal config with the git dirty/state indicators grafted from
 | `→` | accept the gray inline autosuggestion |
 | `F2` | toggle autosuggestion view: list ↔ inline (profile defaults to list) |
 | `abbr` + `Space`/`Enter` | expand abbreviation (see table in profile) |
+| `fd <pattern>` | find files by name (recursive, .gitignore-aware) |
+| `rg <pattern>` | search file contents (abbr `ag` expands to `rg -S`) |
 
 ## Versions at time of writing
 
 pwsh 7.6.3 · PSReadLine 2.4.5 · starship (system-wide, Program Files) ·
-fzf 0.74.0 · zoxide 0.10.0 · ripgrep 15.2.0 · PSFzf 2.7.12
+fzf 0.74.0 · zoxide 0.10.0 · ripgrep 15.2.0 · fd 10.4.2 · PSFzf 2.7.12
 
 ## Leftovers / TODO
 
