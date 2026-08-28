@@ -10,6 +10,20 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory
 # zoxide: frecency-based directory jumping (use `z <fragment>`; abbr `j` expands to it)
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
+# fish-style autocd: a directory typed as a command cd's into it (`..`, `../..`, `~`, `src`).
+# Hooks failed command lookup. Gotchas: PowerShell retries a failed lookup as
+# "get-<name>" first (skip it — `get-../..` would otherwise pass Test-Path), and
+# the script block gets no arguments, hence the closure.
+$ExecutionContext.InvokeCommand.CommandNotFoundAction = {
+    param($CommandName, $EventArgs)
+    if ($CommandName -like 'get-*') { return }
+    if (Test-Path -Path $CommandName -PathType Container) {
+        $target = $CommandName
+        $EventArgs.CommandScriptBlock = { Set-Location -Path $target }.GetNewClosure()
+        $EventArgs.StopSearch = $true
+    }
+}
+
 $global:abbrs = @{
     ag   = 'rg -S'
     g    = 'lazygit'

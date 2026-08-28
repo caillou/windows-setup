@@ -15,6 +15,7 @@ Make PowerShell 7 on Windows feel like my fish setup (almost-stock fish +
 | File find | fd (replaces `ag -g`, [why](https://caillou.ch/blog/2026-07-19-replacing-ag-with-rg-and-fd/)) | fd |
 | Abbreviations | hand-rolled PSReadLine key handlers in profile | fish `abbr` |
 | Autosuggestions | PSReadLine (built-in, on by default in pwsh 7.6+) | fish built-in |
+| Autocd (`..`, `../..`, `src`) | `CommandNotFoundAction` hook in profile | fish built-in |
 
 ## File locations
 
@@ -66,14 +67,24 @@ Copy the files in this repo to their targets:
 ## The profile
 
 [`profiles/PowerShell/Microsoft.PowerShell_profile.ps1`](profiles/PowerShell/Microsoft.PowerShell_profile.ps1)
-does four things: starship prompt, PSFzf key chords, zoxide init, and fish-style
-abbreviations — a `$global:abbrs` table plus two PSReadLine key handlers that
-expand the first word on `Space` (editable before you run) or `Enter` (expand,
-then run).
+does five things: starship prompt, PSFzf key chords, zoxide init, fish-style
+autocd, and fish-style abbreviations — a `$global:abbrs` table plus two
+PSReadLine key handlers that expand the first word on `Space` (editable before
+you run) or `Enter` (expand, then run).
+
+Autocd hooks `$ExecutionContext.InvokeCommand.CommandNotFoundAction`: when a
+typed command doesn't exist but names a directory, it `Set-Location`s there.
+Generic — no per-pattern aliases — so `..`, `../..`, `..\..`, `~`, `src`,
+`./build` all work. Two gotchas baked into the snippet: PowerShell retries a
+failed lookup as `get-<name>` before the bare name (and `get-../..` passes
+`Test-Path` on Windows, so that pass must be skipped), and the replacement
+script block receives no arguments (hence the closure). Quoted paths
+(`'C:\Program Files'`) are string expressions to the parser and just echo —
+use `cd` for those.
 
 The [5.1 profile](profiles/WindowsPowerShell/Microsoft.PowerShell_profile.ps1)
 is the same **minus** the PSFzf and zoxide lines (PSFzf is only installed for
-pwsh 7). Abbreviation changes are maintained in both copies.
+pwsh 7). Autocd and abbreviation changes are maintained in both copies.
 
 Caveat: avoid abbreviations that shadow built-in PowerShell aliases (e.g. `gc`
 is `Get-Content`, `gp` is `Get-ItemProperty` — check with `Get-Alias <name>`).
@@ -101,6 +112,7 @@ both. A minimal config with the git dirty/state indicators grafted from
 | `→` | accept the gray inline autosuggestion |
 | `F2` | toggle autosuggestion view: list ↔ inline (profile defaults to list) |
 | `abbr` + `Space`/`Enter` | expand abbreviation (see table in profile) |
+| `..` / `../..` / `<dir>` | cd there — any directory typed as a command (autocd) |
 | `fd <pattern>` | find files by name (recursive, .gitignore-aware) |
 | `rg <pattern>` | search file contents (abbr `ag` expands to `rg -S`) |
 
