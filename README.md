@@ -16,6 +16,7 @@ Make PowerShell 7 on Windows feel like my fish setup (almost-stock fish +
 | Abbreviations | hand-rolled PSReadLine key handlers in profile | fish `abbr` |
 | Autosuggestions | PSReadLine (built-in, on by default in pwsh 7.6+) | fish built-in |
 | Autocd (`..`, `../..`, `src`) | `CommandNotFoundAction` hook in profile | fish built-in |
+| Git worktrees | worktrunk (`git-wt`; bare `wt` is shadowed by Windows Terminal, see below) | none |
 
 ## File locations
 
@@ -47,6 +48,11 @@ winget install junegunn.fzf
 winget install ajeetdsouza.zoxide
 winget install BurntSushi.ripgrep.MSVC
 winget install sharkdp.fd
+
+# Tools for Claude Code
+winget install jqlang.jq
+winget install pnpm.pnpm
+winget install max-sixty.worktrunk
 
 # 2. Modules (run inside pwsh 7 — restart terminal first so PATH is fresh)
 Install-PSResource -Name PSFzf -Scope CurrentUser -TrustRepository -AcceptLicense
@@ -89,6 +95,38 @@ pwsh 7). Autocd and abbreviation changes are maintained in both copies.
 Caveat: avoid abbreviations that shadow built-in PowerShell aliases (e.g. `gc`
 is `Get-Content`, `gp` is `Get-ItemProperty` — check with `Get-Alias <name>`).
 
+## Claude Code tooling
+
+The shared Claude Code setup (`~/.claude`, synced across machines) expects
+these on the PATH:
+
+- `jqlang.jq` — jq. The memory-sync hook, the statusline and the install
+  script parse JSON with it.
+- `pnpm.pnpm` — pnpm. The from-devops-ticket script installs its dependencies
+  with it.
+- `max-sixty.worktrunk` — worktrunk. Git worktree manager; nothing in the
+  setup depends on it. winget adds both `wt` and `git-wt`, but on Windows
+  bare `wt` keeps resolving to Windows Terminal (`WindowsApps\wt.exe` comes
+  first in the user PATH), so call it as `git-wt` or move the worktrunk
+  package directory ahead of `WindowsApps` in the user PATH.
+
+Claude Code's Bash tool is Git for Windows bash (`C:\Program Files\Git\usr\bin\bash.exe`),
+not pwsh. winget installs land in the *user* PATH, which a running Claude Code
+session does not re-read: restart Claude Code after installing.
+
+**Developer Mode** is required so Git Bash (and the setup's install script)
+can create real symlinks without admin rights. Settings > System > For
+developers > Developer Mode. Check the state from any shell:
+
+```powershell
+reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /v AllowDevelopmentWithoutDevLicense
+```
+
+`0x1` means on; `0x0` or "unable to find the specified registry key or
+value" means off. Without it, `MSYS=winsymlinks:nativestrict ln -s t l` in Git
+Bash fails with `Operation not permitted`. (From Git Bash, prefix the
+`reg query` with `MSYS_NO_PATHCONV=1`, otherwise `/v` is mangled into a path.)
+
 ## starship.toml
 
 [`starship.toml`](starship.toml) — shared with fish in WSL, so changes affect
@@ -120,6 +158,10 @@ both. A minimal config with the git dirty/state indicators grafted from
 
 pwsh 7.6.3 · PSReadLine 2.4.5 · starship (system-wide, Program Files) ·
 fzf 0.74.0 · zoxide 0.10.0 · ripgrep 15.2.0 · fd 10.4.2 · PSFzf 2.7.12
+
+2026-09-28 (Claude Code tooling): pwsh 7.6.6 · winget 1.29.380 · Git for
+Windows 2.55.0 (bash 5.3.15) · Claude Code 2.1.283 · node 24.15.0 · pnpm 11.24.0 ·
+jq 1.8.2 · worktrunk 0.80.0 · ripgrep 15.2.0 · fd 10.4.2 · azure-cli 2.88.0
 
 ## Leftovers / TODO
 
