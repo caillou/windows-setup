@@ -147,6 +147,26 @@ both. A minimal config with the git dirty/state indicators grafted from
 > into the single `*`. Copy the file itself, not retyped text — or regenerate
 > those six lines with `[char]0x200B` if in doubt.
 
+What the git part of the prompt shows, e.g. `main * ⇡ took 3s`:
+
+- `*` (pink): the working tree is dirty (anything modified, staged,
+  untracked, …).
+- `⇡` / `⇣` / `⇕` (cyan): ahead of / behind / diverged from upstream, i.e.
+  unpushed or unpulled commits. `≡` marks a non-empty stash.
+
+`git_status` puts the trailing space inside each optional group, so a part
+that isn't shown leaves no gap, and a part that is shown never runs into
+`took`.
+
+The branch has **no icon**. starship's default `git_branch` symbol is U+E0A0,
+a Nerd Font glyph; with Windows Terminal's default Cascadia Mono it renders
+as a `?` box. Both shells (PowerShell 7 and Windows PowerShell 5.1) read the
+same `~\.config\starship.toml`, so the fix covers both. To get icons back
+later, install a Nerd Font (IBM Plex Mono's is `BlexMono Nerd Font Mono`,
+from the `IBMPlexMono.zip` on the Nerd Fonts GitHub releases, not on winget),
+set it as the Windows Terminal font, and put `$symbol` back in the
+`git_branch` format.
+
 ## Daily-driver cheat sheet
 
 | Key / command | Does |

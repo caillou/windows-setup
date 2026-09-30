@@ -12,8 +12,9 @@ truncate_to_repo = false
 use_os_path_sep = true
 
 [git_branch]
-# Drop the "on " prefix; keep the branch (with its symbol) in gray.
-format = "[$symbol$branch]($style) "
+# Drop the "on " prefix and the branch symbol (a Nerd Font glyph, U+E0A0,
+# that shows as a box in plain fonts); branch name in gray.
+format = "[$branch]($style) "
 style = "bright-black"
 
 [cmd_duration]
@@ -23,8 +24,10 @@ style = "yellow bold"
 [git_status]
 # Pure-style: a single "*" (pink) when the repo is dirty in any way; the
 # individual state symbols are zero-width spaces so they collapse into it.
-# Arrows show ahead/behind vs upstream; "=" symbol below is a stash marker.
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+# Arrows show ahead/behind vs upstream; "≡" symbol below is a stash marker.
+# Each part is a conditional group carrying its own trailing space, so an
+# empty part leaves no stray space and a shown one never touches "took".
+format = "([(*$conflicted$untracked$modified$staged$renamed$deleted)](218) )([$ahead_behind$stashed]($style) )"
 style = "cyan"
 conflicted = "​"
 untracked = "​"
