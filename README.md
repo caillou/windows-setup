@@ -60,6 +60,9 @@ Install-PSResource -Name PSFzf -Scope CurrentUser -TrustRepository -AcceptLicens
 # 3. Config files — copy from this repo (see below), then open a new tab.
 
 # 4. Windows Terminal: Settings > Startup > Default profile = "PowerShell"
+
+# 5. Git global config
+git config --global rerere.enabled true
 ```
 
 Copy the files in this repo to their targets:
@@ -126,6 +129,12 @@ reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /v All
 value" means off. Without it, `MSYS=winsymlinks:nativestrict ln -s t l` in Git
 Bash fails with `Operation not permitted`. (From Git Bash, prefix the
 `reg query` with `MSYS_NO_PATHCONV=1`, otherwise `/v` is mangled into a path.)
+
+## Git config
+
+- `rerere.enabled true` — git records how you resolved a conflict and
+  replays that resolution when the same conflict comes back (repeated
+  rebases, re-merges, worktrees rebased onto a moving `main`).
 
 ## starship.toml
 
