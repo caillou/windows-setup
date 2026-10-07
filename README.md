@@ -63,6 +63,7 @@ Install-PSResource -Name PSFzf -Scope CurrentUser -TrustRepository -AcceptLicens
 
 # 5. Git global config
 git config --global rerere.enabled true
+git config --global core.commentChar ';'
 ```
 
 Copy the files in this repo to their targets:
@@ -135,6 +136,10 @@ Bash fails with `Operation not permitted`. (From Git Bash, prefix the
 - `rerere.enabled true` — git records how you resolved a conflict and
   replays that resolution when the same conflict comes back (repeated
   rebases, re-merges, worktrees rebased onto a moving `main`).
+- `core.commentChar ';'` — commit subjects like `#14317 ...` start with `#`,
+  the default comment character, so git strips that first line whenever it
+  opens the message for editing (`rebase --continue` after a conflict,
+  `commit --amend`).
 
 ## starship.toml
 
