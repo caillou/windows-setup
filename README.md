@@ -16,7 +16,7 @@ Make PowerShell 7 on Windows feel like my fish setup (almost-stock fish +
 | Abbreviations | hand-rolled PSReadLine key handlers in profile | fish `abbr` |
 | Autosuggestions | PSReadLine (built-in, on by default in pwsh 7.6+) | fish built-in |
 | Autocd (`..`, `../..`, `src`) | `CommandNotFoundAction` hook in profile | fish built-in |
-| Git worktrees | worktrunk (`git-wt`; bare `wt` is shadowed by Windows Terminal, see below) | none |
+| Git worktrees | plain `git worktree add` (worktrunk removed, see below) | none |
 
 ## File locations
 
@@ -52,7 +52,6 @@ winget install sharkdp.fd
 # Tools for Claude Code
 winget install jqlang.jq
 winget install pnpm.pnpm
-winget install max-sixty.worktrunk
 
 # 2. Modules (run inside pwsh 7 — restart terminal first so PATH is fresh)
 Install-PSResource -Name PSFzf -Scope CurrentUser -TrustRepository -AcceptLicense
@@ -108,11 +107,12 @@ these on the PATH:
   script parse JSON with it.
 - `pnpm.pnpm` — pnpm. The from-devops-ticket script installs its dependencies
   with it.
-- `max-sixty.worktrunk` — worktrunk. Git worktree manager; nothing in the
-  setup depends on it. winget adds both `wt` and `git-wt`, but on Windows
-  bare `wt` keeps resolving to Windows Terminal (`WindowsApps\wt.exe` comes
-  first in the user PATH), so call it as `git-wt` or move the worktrunk
-  package directory ahead of `WindowsApps` in the user PATH.
+
+Git worktrees are made with plain `git worktree add`. worktrunk was installed
+until 2026-10-20 and then removed: its `copy-ignored` step recreates directory
+junctions (the NuGet `packages/` folder holds one under `aspire.cli`) as real
+symlinks, which fails without Developer Mode (os error 1314), and bare `wt`
+resolves to Windows Terminal anyway.
 
 Claude Code's Bash tool is Git for Windows bash (`C:\Program Files\Git\usr\bin\bash.exe`),
 not pwsh. winget installs land in the *user* PATH, which a running Claude Code
